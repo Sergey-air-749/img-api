@@ -47,14 +47,18 @@ const registration = async (req, res) => {
             posts: [
                 {
                     'PostId': Math.floor(Math.random() * 9999999999),
-                    'userId': 12345,
-                    'img': '',
+                    'img': {
+                        'original': '',
+                        'mini': '',
+                    },
                     'description': ''
                 },
                 {
                     'PostId': Math.floor(Math.random() * 9999999999),
-                    'userId': 12345,
-                    'img': '',
+                    'img': {
+                        'original': '',
+                        'mini': '',
+                    },
                     'description': ''
                 }
             ],
@@ -98,11 +102,18 @@ const posts = async (req, res) => {
     console.log(body);
 
     try {
-        const findUser = await User.findOne({ name: body.name, password: body.password, })
+        const findUser = await User.find({})
 
-        User.find.forEach(element => {
-            posts.push(element.posts[Math.floor(Math.random() * element.posts.length)]) 
+        findUser.forEach(element => {
+            posts.push({
+                "_id": element._id,
+                "name": element.name,
+                "avatar": element.avatar,
+                "post": [ element.posts[Math.floor(Math.random() * element.posts.length)] ]
+            }) 
         });
+
+        res.json(posts)
 
     } catch (error) {
         console.error(error);
