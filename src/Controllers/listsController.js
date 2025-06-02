@@ -46,7 +46,7 @@ const registration = async (req, res) => {
             description: body.description,
             posts: [
                 {
-                    'PostId': Math.floor(Math.random() * 9999999999),
+                    'postId': Math.floor(Math.random() * 9999999999),
                     'img': {
                         'original': '',
                         'mini': '',
@@ -54,7 +54,7 @@ const registration = async (req, res) => {
                     'description': ''
                 },
                 {
-                    'PostId': Math.floor(Math.random() * 9999999999),
+                    'postId': Math.floor(Math.random() * 9999999999),
                     'img': {
                         'original': '',
                         'mini': '',
@@ -95,7 +95,7 @@ const login = async (req, res) => {
 }
 
 
-const posts = async (req, res) => {
+const randomPosts = async (req, res) => {
     const body = req.body
     const posts = []
 
@@ -121,6 +121,36 @@ const posts = async (req, res) => {
 }
 
 
+const getPostId = async (req, res) => {
+    const { postId, userId } = req.params
+    console.log(postId);
+    console.log(userId);
+    
+    try {
+        const lists = await User.findOne({_id: userId})
+
+        console.log(lists);
+        const findPost = lists.posts.find((post) => post.PostId == postId)
+        
+        console.log(lists.posts.find((post) => post.PostId == postId));
+
+
+        const newObj = {
+            "_id": lists._id,
+            "name": lists.name,
+            "avatar": lists.avatar,
+            "post": findPost
+        }
+
+        res.json(newObj)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
+
 
 
 
@@ -130,5 +160,6 @@ module.exports = {
     login,
     getUserId,
     getAllUsers,
-    posts
+    randomPosts,
+    getPostId,
 }
